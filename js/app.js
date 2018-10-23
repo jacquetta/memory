@@ -1,7 +1,7 @@
 /*
  * Create a list that holds all of your cards
  */
-
+let toggledCards = [];
 
 /*
  * Display the cards on the page
@@ -9,6 +9,13 @@
  *   - loop through each card and create its HTML
  *   - add each card's HTML to the page
  */
+
+ function shuffleDeck(){
+   const cardsToShuffle = document.querySelectorAll('.deck li');
+   console.log('CardscardsToShuffle);
+ }
+
+ shuffleDeck();
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
@@ -23,6 +30,61 @@ function shuffle(array) {
     }
 
     return array;
+}
+
+const deck = document.querySelector('.deck');
+
+  deck.addEventListener('click', event => {
+    const clickTarget = event.target;
+    if(isClickValid(clickTarget)){
+      toggleCard(clickTarget);
+      addToggleCard(clickTarget);
+      if(toggledCards.length === 2){
+        checkForMatch(clickTarget);
+      }
+    }
+  });
+
+function isClickValid(clickTarget){
+  return(
+    clickTarget.classList.contains('card') &&
+    !clickTarget.classList.contains('match') &&
+    toggledCards.length < 2 &&
+    !toggledCards.includes(clickTarget)
+);
+}
+
+function checkForMatch(){
+  if(
+    toggledCards[0].firstElementChild.className === toggledCards[1].firstElementChild.className
+  ){
+    toggledCards[0].classList.toggle('match');
+    toggledCards[1].classList.toggle('match');
+    toggledCards = [];
+  } else {
+      setTimeout(() => {
+        toggleCard(toggledCards[0]);
+        toggleCard(toggledCards[1]);
+        toggledCards = [];
+      }, 1000);
+
+  }
+
+}
+
+function toggleCard(clickTarget){
+    clickTarget.classList.toggle('open');
+    clickTarget.classList.toggle('show');
+  }
+
+function toggleCard(card){
+  card.classList.toggle('open');
+  card.classList.toggle('show');
+}
+
+function addToggleCard(clickTarget) {
+  toggledCards.push(clickTarget);
+  console.log(toggledCards);
 }
 
 
