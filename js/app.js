@@ -2,6 +2,20 @@
  * Create a list that holds all of your cards
  */
 let toggledCards = [];
+const deck = document.querySelector('.deck');
+let moves = 0;
+let clockOff = true;
+let time = 0;
+function shuffleDeck(){
+  const cardsToShuffle = Array.from(document.querySelectorAll('.deck li'));
+  const shuffledCards = shuffle(cardsToShuffle);
+  for (card of shuffledCards){
+    deck.appendChild(card);
+  }
+}
+
+shuffleDeck();
+
 
 /*
  * Display the cards on the page
@@ -10,12 +24,6 @@ let toggledCards = [];
  *   - add each card's HTML to the page
  */
 
- function shuffleDeck(){
-   const cardsToShuffle = document.querySelectorAll('.deck li');
-   console.log('CardscardsToShuffle);
- }
-
- shuffleDeck();
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
@@ -32,15 +40,21 @@ function shuffle(array) {
     return array;
 }
 
-const deck = document.querySelector('.deck');
+
 
   deck.addEventListener('click', event => {
     const clickTarget = event.target;
     if(isClickValid(clickTarget)){
+        if(clockOff){
+          startClock();
+          clockOff = false;
+        }
       toggleCard(clickTarget);
       addToggleCard(clickTarget);
       if(toggledCards.length === 2){
         checkForMatch(clickTarget);
+        addMove();
+        checkScore();
       }
     }
   });
@@ -87,7 +101,46 @@ function addToggleCard(clickTarget) {
   console.log(toggledCards);
 }
 
+function addMove(){
+  moves++;
+  const movesText = document.querySelector('.moves');
+  movesText.innerHTML = moves;
+}
 
+function checkScore(){
+  if(moves === 16 || moves === 24){
+    removeStar();
+  }
+}
+
+function hideStar(){
+  const starList = document.querySelectorAll('.stars li');
+  for (star of starList){
+    if(star.style.display !== 'none'){
+      star.style.display = 'none';
+      break;
+    }
+  }
+}
+hideStar();
+hideStar();
+
+function startClock(){
+  let clockId = setInterval(() => {
+    time++;
+    console.log(time);
+  }, 1000);
+}
+
+startClock();
+
+function displayTime(){
+  const clock = document.querySelector('.clock');
+  console.log(clock);
+  clock.innerHTML = time;
+}
+
+displayTime();
 /*
  * set up the event listener for a card. If a card is clicked:
  *  - display the card's symbol (put this functionality in another function that you call from this one)
